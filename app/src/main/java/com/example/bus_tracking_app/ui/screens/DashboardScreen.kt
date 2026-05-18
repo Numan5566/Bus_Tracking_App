@@ -858,3 +858,65 @@ fun SupportTabContent() {
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
+
+@Composable
+fun ActionTile(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    backgroundColor: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        modifier = modifier
+            .height(84.dp)
+            .clickable { onClick() }
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(imageVector = icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(title, color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+        }
+    }
+}
+
+@Composable
+fun TimetableRow(
+    shiftName: String,
+    time: String,
+    stopName: String
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(8.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFF2EC4B6))
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                Text(shiftName, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                Text(stopName, color = Color.White.copy(alpha = 0.6f), fontSize = 11.sp)
+            }
+        }
+        Text(
+            text = time,
+            color = Color(0xFFF4A261),
+            fontWeight = FontWeight.Bold,
+            fontSize = 13.sp
+        )
+    }
+}
