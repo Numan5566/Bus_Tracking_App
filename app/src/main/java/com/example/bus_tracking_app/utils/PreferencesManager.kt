@@ -10,6 +10,22 @@ import org.json.JSONObject
 class PreferencesManager(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences("BusTrackingPrefs", Context.MODE_PRIVATE)
 
+    init {
+        // Automatically pre-populate a default developer profile for quick testing if database is empty!
+        if (getAllUsers().isEmpty()) {
+            val defaultUser = User(
+                email = "admin@bustracking.com",
+                name = "Numan (Developer)",
+                regNumber = "2026-BUS-7892",
+                city = "Lahore",
+                university = "FAST-NUCES Lahore",
+                studentCardUri = null,
+                passwordHash = "admin"
+            )
+            registerUser(defaultUser)
+        }
+    }
+
     companion object {
         private const val KEY_USERS = "registered_users"
         private const val KEY_SMTP_HOST = "smtp_host"
