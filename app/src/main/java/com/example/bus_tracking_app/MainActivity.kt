@@ -36,8 +36,18 @@ class MainActivity : ComponentActivity() {
                 val context = this
                 val prefs = remember { PreferencesManager(context) }
                 
-                var currentScreen by remember { mutableStateOf(AppScreen.LOGIN) }
-                var activeUser by remember { mutableStateOf<User?>(null) }
+                val storedEmail = remember { prefs.getActiveUserEmail() }
+                var currentScreen by remember { 
+                    mutableStateOf(
+                        if (storedEmail != null && prefs.getUser(storedEmail) != null) AppScreen.DASHBOARD 
+                        else AppScreen.LOGIN
+                    ) 
+                }
+                var activeUser by remember { 
+                    mutableStateOf(
+                        if (storedEmail != null) prefs.getUser(storedEmail) else null
+                    ) 
+                }
                 var activeSimulatedEmail by remember { mutableStateOf<SimulatedEmail?>(null) }
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -59,6 +69,10 @@ class MainActivity : ComponentActivity() {
                                         // Login succeeds, find the registered profile to show in the Dashboard
                                         // Since email has already been validated, user must exist
                                         val emailStr = email?.recipient ?: prefs.getAllUsers().firstOrNull()?.email ?: ""
+                                        
+                                        // Save active session persistently!
+                                        prefs.saveActiveUserEmail(emailStr)
+                                        
                                         activeUser = prefs.getUser(emailStr)
                                         
                                         if (email != null) {
@@ -120,6 +134,8 @@ class MainActivity : ComponentActivity() {
                                     DashboardScreen(
                                         user = user,
                                         onSignOut = {
+                                            // Clear persistent session!
+                                            prefs.saveActiveUserEmail(null)
                                             activeUser = null
                                             currentScreen = AppScreen.LOGIN
                                             Toast.makeText(context, "Logged Out Securely", Toast.LENGTH_SHORT).show()

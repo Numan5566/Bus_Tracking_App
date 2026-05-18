@@ -34,6 +34,16 @@ class PreferencesManager(context: Context) {
         private const val KEY_SMTP_PASS = "smtp_pass"
         private const val KEY_SMTP_SSL = "smtp_ssl"
         private const val KEY_SMTP_ENABLED = "smtp_enabled"
+        private const val KEY_ACTIVE_USER_EMAIL = "active_user_email"
+    }
+
+    // --- Active Session Management ---
+    fun saveActiveUserEmail(email: String?) {
+        prefs.edit().putString(KEY_ACTIVE_USER_EMAIL, email).apply()
+    }
+
+    fun getActiveUserEmail(): String? {
+        return prefs.getString(KEY_ACTIVE_USER_EMAIL, null)
     }
 
     // --- User Management ---
